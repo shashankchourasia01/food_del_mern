@@ -126,7 +126,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    // Generate JWT token
+    // Generate JWT tokenx
     const token = createToken(user._id);
     
 
@@ -134,7 +134,7 @@ const loginUser = async (req, res) => {
     return res.status(200).json({ success: true, token });
   } catch (error) {
     console.error("Error during login:", error);
-    return res.status(500).json({ success: false, message: "An error occurred during login" });
+    return res.status(500).json({ success: false, message: "An error occurred during the login" });
   }
 };
 
