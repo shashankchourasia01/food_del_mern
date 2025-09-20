@@ -1,0 +1,111 @@
+.order.add {
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-family: 'Arial', sans-serif;
+}
+
+h3 {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.order-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.order-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.order-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.order-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.order-item div {
+  flex: 1;
+}
+
+.order-item.food {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.order-item-name {
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.order-item-address {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.order-item-phone {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+}
+
+p {
+  margin: 5px 0;
+}
+
+select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.3s;
+}
+
+select:hover {
+  border-color: #007bff;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+p:last-child {
+  font-size: 14px;
+  color: #007bff;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .order-list {
+    grid-template-columns: 1fr;
+  }
+}
