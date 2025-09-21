@@ -129,7 +129,7 @@ import crypto from "crypto";
 
 // Placing user order from Frontend
 const placeOrder = async (req, res) => {
-  const frontend_url = "http://localhost:5173/";
+  const frontend_url = "https://food-delivery-app-zcve.onrender.com/";
 
   try {
     const { userId, items, amount, address } = req.body;
