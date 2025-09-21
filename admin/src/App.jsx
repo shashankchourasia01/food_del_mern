@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
 
 
-  const url = "https://food-del-backend-tqnk.onrender.com"
+  const url = import.meta.env.VITE_BACKEND_URL;
   //const url = "http://localhost:4000"
 
   return (
