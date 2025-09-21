@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 
 const Add = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
   const [image,setImage] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
 
   const [data,setData] = useState({
     name: "",
@@ -22,6 +23,8 @@ const Add = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    setIsUploading(true);
+    
     const formData = new FormData();
     formData.append("name",data.name)
     formData.append("description",data.description)
@@ -46,31 +49,50 @@ const Add = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
     } catch (err) {
       toast.error('Failed to add food')
       console.error(err)
+    } finally {
+      setIsUploading(false);
     }
   }
 
   return (
     <div className='add'>
+      <div className="add-header">
+        <h2>Add New Product</h2>
+        <p>Fill in the details below to add a new menu item</p>
+      </div>
+      
       <form className='flex-col' onSubmit={onSubmitHandler}>
         <div className="add-image-upload flex-col">
-          <p>Upload Imange</p>
-          <label htmlFor="image">
-            <img src={image?URL.createObjectURL(image): assets.upload_area} alt="" />
+          <p>Upload Image</p>
+          <label htmlFor="image" className="image-upload-container">
+            <div className="image-preview">
+              <img src={image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
+              <div className="upload-overlay">
+                <img src={assets.upload_icon} alt="Upload" className="upload-icon" />
+                <span>{image ? "Change Image" : "Click to Upload"}</span>
+              </div>
+            </div>
+            {image && <div className="file-name">{image.name}</div>}
           </label>
           <input onChange={(e)=> setImage(e.target.files[0])} type="file" id='image' hidden required />
         </div>
-        <div className="add-product-name flex-col">
-          <p>Product Name</p>
-          <input onChange={onChangeHandler} value={data.name} type="text" name='name' placeholder='Type here' />
-        </div>
-        <div className="add-product-description flex-col">
-          <p>Product Description</p>
-          <textarea  onChange={onChangeHandler} value={data.description} name="description" rows="6" placeholder='Write content here' required></textarea>
-        </div>
-        <div className="add-category-price">
+        
+        <div className="form-row">
+          <div className="add-product-name flex-col">
+            <label htmlFor="name">Product Name</label>
+            <input 
+              onChange={onChangeHandler} 
+              value={data.name} 
+              type="text" 
+              name='name' 
+              id="name"
+              placeholder='Type product name here' 
+            />
+          </div>
+          
           <div className="add-category flex-col">
-            <p>Product Category</p>
-            <select  onChange={onChangeHandler} name="category" value={data.category}>
+            <label htmlFor="category">Product Category</label>
+            <select onChange={onChangeHandler} name="category" id="category" value={data.category}>
               <option value="Salad">Salad</option>
               <option value="Rolls">Rolls</option>
               <option value="Deserts">Deserts</option>
@@ -81,12 +103,57 @@ const Add = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
               <option value="Noodles">Noodles</option>
             </select>
           </div>
+        </div>
+        
+        <div className="add-product-description flex-col">
+          <label htmlFor="description">Product Description</label>
+          <textarea  
+            onChange={onChangeHandler} 
+            value={data.description} 
+            name="description" 
+            id="description"
+            rows="6" 
+            placeholder='Write product description here' 
+            required
+          ></textarea>
+          <div className="char-count">{data.description.length}/500 characters</div>
+        </div>
+        
+        <div className="form-row">
           <div className="add-price flex-col">
-            <p>Product Price</p>
-            <input  onChange={onChangeHandler} value={data.price} type="Number" name='price' placeholder='$20' />
+            <label htmlFor="price">Product Price ($)</label>
+            <div className="price-input-container">
+              <span className="currency-symbol">$</span>
+              <input  
+                onChange={onChangeHandler} 
+                value={data.price} 
+                type="number" 
+                name='price' 
+                id="price"
+                placeholder='20.00' 
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          
+          <div className="add-submit">
+            <button 
+              type='submit' 
+              className={`add-button ${isUploading ? 'loading' : ''}`}
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <>
+                  <div className="spinner"></div>
+                  Adding Item...
+                </>
+              ) : (
+                'Add Product'
+              )}
+            </button>
           </div>
         </div>
-        <button type='submit' className='add-button'>ADD</button>
       </form>
     </div>
   )
