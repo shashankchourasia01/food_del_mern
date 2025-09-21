@@ -113,19 +113,19 @@
 // export {placeOrder,verifyOrder,userOrders,listOrders}
 
 
-
 import dotenv from "dotenv";
 dotenv.config();
 
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
-import Razorpay from "razorpay";
+// import Razorpay from "razorpay";
 import crypto from "crypto";
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_SECRET_KEY,
-});
+// ❌ Commenting Razorpay initialization
+// const razorpay = new Razorpay({
+//   key_id: process.env.RAZORPAY_KEY_ID,
+//   key_secret: process.env.RAZORPAY_SECRET_KEY,
+// });
 
 // Placing user order from Frontend
 const placeOrder = async (req, res) => {
@@ -134,7 +134,6 @@ const placeOrder = async (req, res) => {
   try {
     const { userId, items, amount, address } = req.body;
 
-    // Validate input
     if (!userId || !items || !amount || !address) {
       return res
         .status(400)
@@ -153,21 +152,20 @@ const placeOrder = async (req, res) => {
     await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
     const totalAmount =
-      items.reduce((acc, item) => acc + item.price * item.quantity, 0) + 2 * 80; // Add delivery charges
+      items.reduce((acc, item) => acc + item.price * item.quantity, 0) + 2 * 80;
 
-    // Creating Razorpay order
-    const options = {
-      amount: totalAmount * 100, // Amount in paise
-      currency: "INR",
-      receipt: `order_rcptid_${newOrder._id}`,
-    };
-
-    const razorpayOrder = await razorpay.orders.create(options);
+    // ❌ Commented Razorpay order creation
+    // const options = {
+    //   amount: totalAmount * 100,
+    //   currency: "INR",
+    //   receipt: `order_rcptid_${newOrder._id}`,
+    // };
+    // const razorpayOrder = await razorpay.orders.create(options);
 
     res.json({
       success: true,
       orderId: newOrder._id,
-      razorpayOrderId: razorpayOrder.id,
+      // razorpayOrderId: razorpayOrder.id,
       amount: totalAmount,
     });
   } catch (error) {
@@ -178,38 +176,14 @@ const placeOrder = async (req, res) => {
 
 // Verifying Razorpay payment
 const verifyOrder = async (req, res) => {
-  const { orderId, razorpayPaymentId, razorpayOrderId, razorpaySignature } =
-    req.body;
+  // ❌ Entire Razorpay verify logic commented
+  // const { orderId, razorpayPaymentId, razorpayOrderId, razorpaySignature } =
+  //   req.body;
 
   try {
-    // Validate input
-    if (
-      !orderId ||
-      !razorpayPaymentId ||
-      !razorpayOrderId ||
-      !razorpaySignature
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid input data" });
-    }
-
-    // Verifying the signature
-    const shasum = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET_KEY);
-    shasum.update(razorpayOrderId + "|" + razorpayPaymentId);
-    const generatedSignature = shasum.digest("hex");
-
-    if (generatedSignature === razorpaySignature) {
-      // Payment successful
-      await orderModel.findByIdAndUpdate(orderId, { payment: true });
-      res.json({ success: true, message: "Payment Verified" });
-    } else {
-      // Payment failed, delete order
-      await orderModel.findByIdAndDelete(orderId);
-      res
-        .status(400)
-        .json({ success: false, message: "Payment Verification Failed" });
-    }
+    // Simple fallback: auto-mark payment true (for testing)
+    await orderModel.findByIdAndUpdate(req.body.orderId, { payment: true });
+    res.json({ success: true, message: "Payment Skipped (Razorpay Disabled)" });
   } catch (error) {
     console.error("Error in verifyOrder:", error.message);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -220,8 +194,6 @@ const verifyOrder = async (req, res) => {
 const userOrders = async (req, res) => {
   try {
     const { userId } = req.body;
-
-    // Validate input
     if (!userId) {
       return res
         .status(400)
@@ -247,18 +219,19 @@ const listOrders = async (req, res) => {
   }
 };
 
-
-//Api for updating orderstatus
-const updateStatus = async (req,res) => {
+// API for updating order status
+const updateStatus = async (req, res) => {
   try {
-    await orderModel.findByIdAndUpdate(req.body.orderId,{status:req.body.status})
-    res.json({success:true,message:"Status Updated"})
+    await orderModel.findByIdAndUpdate(req.body.orderId, {
+      status: req.body.status,
+    });
+    res.json({ success: true, message: "Status Updated" });
   } catch (error) {
     console.log(error);
-    res.json({success:false,message:"Error"})
-    
+    res.json({ success: false, message: "Error" });
   }
-}
+};
 
 export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus };
+
 
