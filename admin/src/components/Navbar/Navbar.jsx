@@ -38,7 +38,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className="profile-container">
-          <img className='profile' src={assets.sha} alt="Profile" />
+          <img className='profile' src={assets.profile_image} alt="Profile" />
           <div className="profile-dropdown">
             <span>Admin User</span>
             <img src={assets.dropdown_icon} alt="Dropdown" />
