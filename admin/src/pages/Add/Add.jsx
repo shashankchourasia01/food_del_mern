@@ -4,63 +4,50 @@ import {assets} from '../../assets/assets'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const Add = ({url}) => {
+const Add = ({ url = "https://food-del-backend-tqnk.onrender.com" }) => {
+  const [image,setImage] = useState(false)
 
-      // const url = "http://localhost:4000";
-      const url = "https://food-del-backend-tqnk.onrender.com";
+  const [data,setData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "Salad"
+  })
 
-      const [image,setImage] = useState(false)
+  const onChangeHandler = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setData(data =>({...data,[name]:value}))
+  }
 
-      const [data,setData] = useState({
-        name: "",
-        description: "",
-        price: "",
-        category: "Salad"
-      })
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("name",data.name)
+    formData.append("description",data.description)
+    formData.append("price",Number(data.price))
+    formData.append("category",data.category)
+    formData.append("image",image)
 
-
-      const onChangeHandler = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setData(data =>({...data,[name]:value}))
+    try {
+      const response = await axios.post(`${url}/api/food/add`,formData);
+      if (response.data.success) {
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Salad"
+        })
+        setImage(false)
+        toast.success(response.data.message)
+      } else {
+        toast.error(response.data.message)
       }
-
-
-
-      //API call
-      const onSubmitHandler = async (event) => {
-          event.preventDefault();
-          const formData = new FormData();
-          formData.append("name",data.name)
-          formData.append("description",data.description)
-          formData.append("price",Number(data.price))
-          formData.append("category",data.category)
-          formData.append("image",image)
-
-          const response = await axios.post(`${url}/api/food/add`,formData);
-
-          if (response.data.success) {
-            setData({
-              name: "",
-              description: "",
-              price: "",
-              category: "Salad"
-            })
-            setImage(false)
-            toast.success(response.data.message)
-          }
-          else {
-            toast.error(response.data.message)
-          }
-      }
-      
-
-
-      //Whenever our data is updated this function will be Executed
-      // useEffect(()=> {
-      //   console.log(data);
-        
-      // },[data])
+    } catch (err) {
+      toast.error('Failed to add food')
+      console.error(err)
+    }
+  }
 
   return (
     <div className='add'>
@@ -83,7 +70,7 @@ const Add = ({url}) => {
         <div className="add-category-price">
           <div className="add-category flex-col">
             <p>Product Category</p>
-            <select  onChange={onChangeHandler} name="category">
+            <select  onChange={onChangeHandler} name="category" value={data.category}>
               <option value="Salad">Salad</option>
               <option value="Rolls">Rolls</option>
               <option value="Deserts">Deserts</option>
