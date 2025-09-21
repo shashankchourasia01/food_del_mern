@@ -5,10 +5,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
 
-const Orders = ({ url }) => {
+const Orders = ({ url = "https://food-del-backend-tqnk.onrender.com" }) => {
 
   // const url = "http://localhost:4000"
-  const url = "https://food-del-backend-tqnk.onrender.com"
+  //const url = "https://food-del-backend-tqnk.onrender.com"
 
   const [orders, setOrders] = useState([]);
 
