@@ -3,7 +3,7 @@ import './List.css'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const List = ({url = "https://food-del-backend-tqnk.onrender.com"}) => {
+const List = ({url = import.meta.env.VITE_BACKEND_URL}) => {
 
   // const url = "http://localhost:4000"
   //const url = "https://food-del-backend-tqnk.onrender.com"

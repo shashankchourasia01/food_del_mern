@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
 
-const Orders = ({ url = "https://food-del-backend-tqnk.onrender.com" }) => {
+const Orders = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
 
   // const url = "http://localhost:4000"
   //const url = "https://food-del-backend-tqnk.onrender.com"

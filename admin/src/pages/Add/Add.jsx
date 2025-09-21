@@ -4,7 +4,7 @@ import {assets} from '../../assets/assets'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const Add = ({ url = "https://food-del-backend-tqnk.onrender.com" }) => {
+const Add = ({ url = import.meta.env.VITE_BACKEND_URL }) => {
   const [image,setImage] = useState(false)
 
   const [data,setData] = useState({
